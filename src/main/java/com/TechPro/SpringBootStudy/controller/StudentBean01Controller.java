@@ -1,8 +1,8 @@
-package com.TechPro.SpringBootStudy;
+package com.TechPro.SpringBootStudy.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,6 +69,37 @@ public class StudentBean01Controller {
                 (new StudentBean01("Mike", 23, "tq12723")));
 
     }
+
+    //Lose coupling...
+    @Autowired //Trick :@Autowired--> loose coupling deki her variable icin kullanilmali
+    //StudentBean01 t;
+    StudentBean02 t;
+
+
+    @GetMapping(path = "/getStudy")
+    public String getStudy01(){
+        return t.study();//
+
+    }
+
+    @Autowired
+            @Qualifier(value="studentBean02")// @Qualifier--> @@AutoWired ile tanimlanan obj create edilecek data type ni tanimlar.
+    // Tanimlanacak data type annotaion a parametre olur
+    //@Qualifier ile bu interfaceden oluşan deklarasyona IOC’deki studentBean01 veya studentBean02 adındaki bekleyen variable’lardan
+    // hangisini atayacağına karar veriyoruz
+    StudentInterface u;
+
+
+    @GetMapping(path = "/getStudy1")
+    public String getStudy02(){
+
+        return u.study();
+
+    }
+
+
+
+
 
 
 }

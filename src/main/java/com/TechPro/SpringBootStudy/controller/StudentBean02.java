@@ -1,24 +1,20 @@
-package com.TechPro.SpringBootStudy;
-
+package com.TechPro.SpringBootStudy.controller;
 
 import org.springframework.stereotype.Component;
 
-@Component//bilesen tamamlayici anlamina gelir : kullanilan classtan objeleri IOC create eder
-public class StudentBean01 { //component sayesinde ioc yani konteynira obje uretecegiz
-
-    //new StudentBean01(); --> bu tight coupling ama @Component lose coupling (obj injection)
-
-    //pojo plan old java obj
+@Component
+public class StudentBean02 implements StudentInterface{
+//pojo plan old java obj
 
     private String name;
     private  int age;
     private String  id;
 
-    public StudentBean01() {
+    public StudentBean02() {
         System.out.println("parametresiz constructor run edildi...");
     }
 
-    public StudentBean01(String name, int age, String id) {
+    public StudentBean02(String name, int age, String id) {
         this.name = name;
         this.age = age;
         this.id = id;
@@ -56,4 +52,13 @@ public class StudentBean01 { //component sayesinde ioc yani konteynira obje uret
                 ", id='" + id + '\'' +
                 '}';
     }
+
+
+    @Override
+    public String study() {
+        return "bu yaziyi okuduysan StudentBean02 class indan geliyor";
+    }
 }
+
+
+
