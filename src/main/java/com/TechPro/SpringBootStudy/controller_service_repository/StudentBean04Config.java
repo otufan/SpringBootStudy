@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -17,10 +18,10 @@ public class StudentBean04Config {
 
 
         return args -> studentRepo.saveAll(List.of(
-        new StudentBean04(110L, "Heike Long", "heike@mail.com"cd )
-
-
-
+        new StudentBean04(110L, "Heike Long", "heike@mail.com", LocalDate.of(1992, 4, 4)),
+        new StudentBean04(111L, "Michel Mountain", "michel@mail.com", LocalDate.of(1989, 6, 14)),
+        new StudentBean04(112L, "Wolter Price", "wolter@mail.com", LocalDate.of(1999, 11, 24)),
+        new StudentBean04(113L, "Mary High", "mary@mail.com", LocalDate.of(1996, 12, 6))
 
         ));
     }

@@ -14,6 +14,4 @@ public interface StudentBean04Repository extends JpaRepository<StudentBean04, Lo
     //email ile data bulan method
 
 
-
-
 }
