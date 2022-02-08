@@ -11,12 +11,9 @@ import java.util.List;
 @Configuration // Bu class ta data create edip DB'deki tabloya datalar gonderecek: SQL insert komutu ile de yapilabilir
 public class StudentBean04Config {
 
-    @Bean //obj return edilen methodlar @Bean annotaion kullanilir  @Bean sadece method level da kullanilir
+    @Bean //obj olan methodlar @Bean annotaion kullanilir  @Bean sadece method level da kullanilir
     //variable class ve constructor level da kullanilmaz
     CommandLineRunner clr1(StudentBean04Repository studentRepo){
-
-
-
         return args -> studentRepo.saveAll(List.of(
         new StudentBean04(110L, "Heike Long", "heike@mail.com", LocalDate.of(1992, 4, 4)),
         new StudentBean04(111L, "Michel Mountain", "michel@mail.com", LocalDate.of(1989, 6, 14)),
