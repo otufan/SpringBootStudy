@@ -1,6 +1,7 @@
 package com.TechPro.SpringBootStudy.basic_authendication;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,14 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity //Tanimli oldugu class ta form based security yerine (basic authentication) configure eder
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    private final PasswordConfig passEncode;//final obj bir deger almali bu degeri alacagi constructor create edilmeli
+
+    @Autowired
+    public ApplicationSecurityConfig(PasswordConfig passEncode){ //PasswordConfig class tan create edilen passEncode objeye deger atayan
+        //constructor
+        this.passEncode=passEncode;
+    }
 
    // @Override
    // protected void configure(HttpSecurity http) throws Exception {
@@ -47,12 +56,17 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     protected UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder().username("admin").password("Noah1234").roles("admin").build(); //convension tanim
-        UserDetails student = User.builder().username("Mike").password("Mike1234").roles("student").build();
-        UserDetails master = User.builder().username("Mery").password("Mery1234").roles("Master of Universe").build();
+        //UserDetails admin = User.builder().username("admin").password("Noah1234").roles("admin").build(); //convension tanim
+        //UserDetails student = User.builder().username("Mike").password("Mike1234").roles("student").build();
+        //UserDetails master = User.builder().username("Mery").password("Mery1234").roles("Master of Universe").build();
+
+        UserDetails admin = User.builder().username("admin").password(passEncode.passEncrypt().encode("admin1234")).roles("admin").build(); //convension tanim
+        UserDetails student = User.builder().username("Mike").password(passEncode.passEncrypt().encode("Mike1234")).roles("student").build();
+        UserDetails master = User.builder().username("Mery").password(passEncode.passEncrypt().encode("Mery1234")).roles("Master of Universe").build();
+
         // return student; --> bu return type hatasi verir
         return new InMemoryUserDetailsManager(admin, student, master ); //bu method ile UserDetails classindan olusan kullanicilar
                         //bir conteynir a konularak return edilmis oldu
     }
-    
+
 }
