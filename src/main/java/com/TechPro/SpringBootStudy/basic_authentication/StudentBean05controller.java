@@ -1,4 +1,4 @@
-package com.TechPro.SpringBootStudy.basic_authendication.basic_authentication;
+package com.TechPro.SpringBootStudy.basic_authentication;
 
 
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +30,15 @@ public class StudentBean05controller {
 
 
         return stdSrvc.updateFullyStudentById(id,newStd);
+    }
+    @DeleteMapping(path="/deleteStudentById/{id}")
+    public String deleteStdntById(@PathVariable Long id){
+        return stdSrvc.deletStudentById(id);//service layer method call
+    }
+    @PatchMapping(path="/updatePartialStudentById/{id}")
+    public StudentBean05 updatePartialStdntById( @PathVariable Long id,@RequestBody StudentBean05 newStdnt){
+
+        return  stdSrvc.updatePatchStudentById(id,newStdnt);
+
     }
 }

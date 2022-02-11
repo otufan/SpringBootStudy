@@ -1,4 +1,4 @@
-package com.TechPro.SpringBootStudy.basic_authendication.basic_authentication;
+package com.TechPro.SpringBootStudy.basic_authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.TechPro.SpringBootStudy.basic_authendication.basic_authentication;
+package com.TechPro.SpringBootStudy.basic_authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,19 +59,19 @@ public class StudentBean05Service {
         3) email null olamaz -->EXCEPTION
         4) email eski ve yeni aynı ise gereksiz işlem için update etmemeli
          */
-        if (kullanıcınınOgrc.getEmail()==null){
+        if (kullanıcınınOgrc.getEmail() == null) {
             kullanıcınınOgrc.setEmail("");
         }
         Optional<StudentBean05> emailOLaneskiOgrc = studentRepo.findStudentBean05ByEmail(kullanıcınınOgrc.getEmail());
         if (emailOLaneskiOgrc.isPresent()) {//1. sart kontrol edildi eger emailolanogc containerde varsa
             throw new IllegalStateException("daha once bu email kullanıldı");
-        }else if (!kullanıcınınOgrc.getEmail().contains("@")&& kullanıcınınOgrc.getEmail()!=""){//2 . sart kontrol edilecek
+        } else if (!kullanıcınınOgrc.getEmail().contains("@") && kullanıcınınOgrc.getEmail() != "") {//2 . sart kontrol edilecek
             throw new IllegalStateException("@ karakteri kullanmalısınız");
-        }else if(kullanıcınınOgrc.getEmail()==null){//3. sart kontrol edilecek
+        } else if (kullanıcınınOgrc.getEmail() == null) {//3. sart kontrol edilecek
             throw new IllegalStateException("mutlaka bir email girmelisiniz");
-        }else if(!kullanıcınınOgrc.getEmail().equals(eskiOgrc.getEmail())){
+        } else if (!kullanıcınınOgrc.getEmail().equals(eskiOgrc.getEmail())) {
             eskiOgrc.setEmail(kullanıcınınOgrc.getEmail());
-        }else {
+        } else {
             throw new IllegalStateException("aynı e mail update edilmez");
         }
 
@@ -83,7 +83,7 @@ public class StudentBean05Service {
         if (Period.between(kullanıcınınOgrc.getDob(), LocalDate.now()).isNegative()) {//1. sart kontrol edildi
             throw new IllegalStateException("hatalı dob giridiniz");
 
-        }else if (!kullanıcınınOgrc.getDob().equals(eskiOgrc.getDob())) {//2. sart kontrol edildi
+        } else if (!kullanıcınınOgrc.getDob().equals(eskiOgrc.getDob())) {//2. sart kontrol edildi
             eskiOgrc.setDob(kullanıcınınOgrc.getDob());
 
         }
@@ -91,5 +91,50 @@ public class StudentBean05Service {
         return studentRepo.save(eskiOgrc);
     }
 
+    //Bu met id ile data(student obj) delete edecek
+    public String deletStudentById(Long id) {
+        if (!studentRepo.existsById(id)) {//id'si verilen obj'nin DB'de varlıgını kontrol eder-->id'li ogrc yoksa code excute stop App stop
+            throw new IllegalStateException("AGAM niddin " + id + " li ogrc araziii");
+        }
+        studentRepo.deleteById(id);//id'Li oğrs repodan call edip delet eder
+        return "AGAM " + id + "li ogrc sizlere omur...";//action hakkında bilgi verir
+    }//bu method run için controller da call edilmeli
+
+
+    //Bu method obj'lerin PACTH(partial kısmi) datalarını update eder
+    public StudentBean05 updatePatchStudentById(long id, StudentBean05 newStudent) {
+        StudentBean05 existingStudenById = studentRepo.
+                findById(id).
+                orElseThrow(() -> new IllegalStateException("id'si " + id + " olan ogrc yok"));//Update edilecek ogrc varlıgı kontrol ediliyor
+     //student email update edilecek BRD
+
+//email aupdate edilecek
+        /*
+        brd:
+
+        1) email tekararlı olmaz uniq-->EXCEPTION
+        2) email gecerli (@ içermeli) olmalı-->EXCEPTION
+        3) email null olamaz -->EXCEPTION
+        4) email eski ve yeni aynı ise gereksiz işlem için update etmemeli
+         */
+        if (newStudent.getEmail() == null) {
+            newStudent.setEmail("");
+        }
+        Optional<StudentBean05> emailOLaneskiOgrc = studentRepo.findStudentBean05ByEmail(newStudent.getEmail());
+        if (emailOLaneskiOgrc.isPresent()) {//1. sart kontrol edildi eger emailolanogc containerde varsa
+            throw new IllegalStateException("daha once bu email kullanıldı");
+        } else if (!newStudent.getEmail().contains("@") && newStudent.getEmail() != "") {//2 . sart kontrol edilecek
+            throw new IllegalStateException("@ karakteri kullanmalısınız");
+        } else if (newStudent.getEmail() == null) {//3. sart kontrol edilecek
+            throw new IllegalStateException("mutlaka bir email girmelisiniz");
+        } else if (!newStudent.getEmail().equals(existingStudenById.getEmail())) {
+            existingStudenById.setEmail(newStudent.getEmail());
+        } else {
+            throw new IllegalStateException("aynı e mail update edilmez");
+        }
+
+
+        return studentRepo.save(existingStudenById);//update edileck ogrc action sonrası save edilerel return edilir
+    }//Bu Method controller layer'e call edilmeli
 
 }
