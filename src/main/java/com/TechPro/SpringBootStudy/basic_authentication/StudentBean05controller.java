@@ -3,6 +3,7 @@ package com.TechPro.SpringBootStudy.basic_authentication;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -40,5 +41,9 @@ public class StudentBean05controller {
 
         return  stdSrvc.updatePatchStudentById(id,newStdnt);
 
+    }
+    @PostMapping(path="/addStudent")
+    public StudentBean05 addStndt(@RequestBody StudentBean05 newStdnt) throws SQLException, ClassNotFoundException {
+        return stdSrvc.addStudent(newStdnt);
     }
 }

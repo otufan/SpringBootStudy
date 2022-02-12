@@ -3,6 +3,7 @@ package com.TechPro.SpringBootStudy.basic_authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -106,7 +107,7 @@ public class StudentBean05Service {
         StudentBean05 existingStudenById = studentRepo.
                 findById(id).
                 orElseThrow(() -> new IllegalStateException("id'si " + id + " olan ogrc yok"));//Update edilecek ogrc varlıgı kontrol ediliyor
-     //student email update edilecek BRD
+        //student email update edilecek BRD
 
 //email aupdate edilecek
         /*
@@ -137,4 +138,41 @@ public class StudentBean05Service {
         return studentRepo.save(existingStudenById);//update edileck ogrc action sonrası save edilerel return edilir
     }//Bu Method controller layer'e call edilmeli
 
+//Bu Method yeni bir student obj cretae eder
+
+    public StudentBean05 addStudent(StudentBean05 newStudent) throws ClassNotFoundException, SQLException {
+        //ogrc email datası girilecek
+        //e mail tekrarsız olmalı BRD
+      Optional<StudentBean05> existingStudenById= studentRepo.findStudentBean05ByEmail(newStudent.getEmail());
+        if (existingStudenById.isPresent()){//eski ogrc email varsa exc
+            throw new IllegalStateException("AGAM bu "+newStudent.getEmail()+" 2. el sana ajente bir imeyıl lazım");
+
+        }
+        //ogrc name datası giriliecek
+        if (newStudent.getName()==null) {//yeni ogrc henus name girmemis-->excp
+            throw new IllegalStateException("AGAM adın yoksa sen de yoksun  :-( ");
+        }
+
+        //her yeni ogrc için app uniq id  cretae etmeli...
+        /*
+        LOGİC : DB'de varolan max id get edip +1 hali yeni id assaign edilmeli
+         */
+        //DB'ye JDBC connection ...
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sys?serverTimezone=UTC","root","1234");
+        Statement st = con.createStatement();
+
+        //max id get içinSQL query komutla
+        String sqlQueryForMaxId="select max(id) from students";//birden cok (id tek olacagı içim bizm sorguda tek verir)sonuc  satır verir
+        ResultSet result= st.executeQuery(sqlQueryForMaxId);//query sonrası satırlerı return eder loop ile istene  satır alınır
+        Long maxId=0l;
+        while(result.next()){//next() pointer bir sonraki satıra gider onceki satur return eder
+           maxId= result.getLong(1);
+        }
+        newStudent.setId(maxId+1);
+         newStudent.setAge(newStudent.getAge());
+         newStudent.setErrMsg("AGAM müjde nur topu gibi ogrencin oldii");
+
+        return studentRepo.save(newStudent);
+    }//bu method controller call edilmeli
 }
